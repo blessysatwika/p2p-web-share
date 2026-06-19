@@ -84,11 +84,16 @@ export default function App() {
     // Receiver side: incoming data channel
     peer.ondatachannel = (event) => {
       const channel = event.channel;
+      dataChannelRef.current = channel;
       addLog(`Data channel received: ${channel.label}`);
 
       channel.onopen = () => {
         setPeerConnected(true);
         addLog("✅ Receive channel open");
+      };
+      channel.onclose = () => {
+        setPeerConnected(false);
+        addLog("Receive channel closed");
       };
 
       channel.onmessage = (e) => handleIncomingMessage(e.data);
@@ -189,6 +194,7 @@ export default function App() {
         setPeerConnected(false);
         addLog("Data channel closed");
       };
+      channel.onmessage = (e) => handleIncomingMessage(e.data);
 
       const offer = await peer.createOffer();
       await peer.setLocalDescription(offer);
