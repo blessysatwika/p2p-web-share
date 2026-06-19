@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 import { useEffect, useState, useRef, useCallback } from "react";
 
-const socket = io("http://localhost:5000");
+const socket = io(import.meta.env.VITE_SERVER_URL || "http://localhost:5000");
 
 const CHUNK_SIZE = 16 * 1024; // 16KB chunks
 
